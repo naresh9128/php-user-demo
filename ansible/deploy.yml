@@ -1,0 +1,25 @@
+---
+- name: Deploy PHP and MySQL
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Start services without deleting database data
+      ansible.builtin.command:
+        argv:
+          - docker
+          - compose
+          - --project-name
+          - php-user-demo
+          - --env-file
+          - /opt/php-user-demo.env
+          - -f
+          - "{{ playbook_dir }}/../compose.yml"
+          - up
+          - -d
+          - --no-build
+          - --wait
+          - --wait-timeout
+          - "300"
+      environment:
+        IMAGE_TAG: "{{ image_tag }}"
